@@ -1,0 +1,22 @@
+[
+    {
+        "name":"file1.jpg",
+        "type":"Image",
+        "size":1500
+    },
+    {
+        "name":"file2.jpg",
+        "type":"Image",
+        "size":1500
+    },
+    {
+        "name":"file3.jpg",
+        "type":"Image",
+        "size":1500
+    },
+    {
+        "name":"file4.jpg",
+        "type":"Image",
+        "size":1500
+    }
+]
