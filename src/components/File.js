@@ -1,10 +1,20 @@
 import React, {Component} from 'react'
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import FileAvatar from './FileAvatar'
 
 class File extends Component {
 
-    render() {  
+    render() {
+        const size = !this.props.file.isContainer ? this.props.file.size + " MiB" : ""
         return (
-            <button onClick={ () => this.props.handleClick(this.props.file.id)}>cycki</button>
+          <ListItem onClick={ () => this.props.handleClick(this.props.file.id)}>
+            <ListItemAvatar>
+              <FileAvatar type={this.props.file.type}/>
+            </ListItemAvatar>
+            <ListItemText primary={this.props.file.name} secondary={size} />
+            </ListItem>
         )
     }
 }

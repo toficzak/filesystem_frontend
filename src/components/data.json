@@ -3,24 +3,27 @@
         "id":1,
         "name":"file1.jpg",
         "type":"Image",
-        "size":1500
+        "size":1500,
+        "isContainer":false
     },
     {
         "id":2,
-        "name":"file2.jpg",
-        "type":"Image",
-        "size":1500
+        "name":"paper.docx",
+        "type":"Document",
+        "size":3000,
+        "isContainer":false
     },
     {
         "id":3,
-        "name":"file3.jpg",
-        "type":"Image",
-        "size":1500
+        "name":"Directory",
+        "type":"Directory",
+        "isContainer":true
     },
     {
         "id":4,
-        "name":"file4.jpg",
-        "type":"Image",
-        "size":1500
+        "name":"database.sql",
+        "type":"SQL",
+        "size":15000,
+        "isContainer":false
     }
 ]

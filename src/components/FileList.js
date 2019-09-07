@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import File from '../components/File'
 import myData from './data.json';
+import List from '@material-ui/core/List';
 
 class FileList extends Component {
     constructor() {
@@ -28,7 +29,9 @@ class FileList extends Component {
 
         return (
             <div>
+                <List>
                     {fileItems}
+                </List>
             </div>
         )
     }
