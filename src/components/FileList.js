@@ -9,7 +9,6 @@ class FileList extends Component {
             loading: false,
             files: []
         }
-        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
