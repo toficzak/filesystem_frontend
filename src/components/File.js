@@ -9,7 +9,7 @@ class File extends Component {
     render() {
         const size = !this.props.file.isContainer ? this.props.file.size + " MiB" : ""
         return (
-          <ListItem onClick={ () => this.props.handleClick(this.props.file.id)}>
+          <ListItem onClick={ () => this.props.handleClick(this.props.file)}>
             <ListItemAvatar>
               <FileAvatar type={this.props.file.type}/>
             </ListItemAvatar>
