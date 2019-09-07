@@ -1,20 +1,24 @@
 [
     {
+        "id":1,
         "name":"file1.jpg",
         "type":"Image",
         "size":1500
     },
     {
+        "id":2,
         "name":"file2.jpg",
         "type":"Image",
         "size":1500
     },
     {
+        "id":3,
         "name":"file3.jpg",
         "type":"Image",
         "size":1500
     },
     {
+        "id":4,
         "name":"file4.jpg",
         "type":"Image",
         "size":1500
