@@ -55,7 +55,6 @@ class FileList extends Component {
 
     render() {
         let parentFile = ""
-        console.log(this.state.parent)
         if(this.state.parent !== null) 
         {
             parentFile = <File key={this.state.parent.id} file={this.state.parent} handleClick={this.handleClick} />
