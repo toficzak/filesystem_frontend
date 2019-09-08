@@ -7,6 +7,7 @@ class FileList extends Component {
         super()
         this.state = {
             loading: false,
+            parent: null,
             files: []
         }
         this.handleClick = this.handleClick.bind(this);
@@ -17,11 +18,12 @@ class FileList extends Component {
             .then(response => response.json())
             .then(rootFile => fetch("http://localhost:8080/files/" + rootFile.id))
             .then(response => response.json())
-            .then(files => {
-                console.log(files)
+            .then(response => {
+                console.log(response)
                 this.setState({
                     loading: false,
-                    files: files
+                    parent: response.metadata.parent,
+                    files: response.data.files
                 })
             })
 
@@ -35,11 +37,12 @@ class FileList extends Component {
         if (file.isContainer) {
             fetch("http://localhost:8080/files/" + file.id)
                 .then(response => response.json())
-                .then(files => {
-                    console.log(files)
+                .then(response => {
+                    console.log(response)
                     this.setState({
                         loading: false,
-                        files: files
+                        parent: response.metadata.parent,
+                        files: response.data.files
                     })
                 })
         }
@@ -51,11 +54,18 @@ class FileList extends Component {
 
 
     render() {
+        let parentFile = ""
+        console.log(this.state.parent)
+        if(this.state.parent !== null) 
+        {
+            parentFile = <File key={this.state.parent.id} file={this.state.parent} handleClick={this.handleClick} />
+        }
         const fileItems = this.state.files.map(file => <File key={file.id} file={file} handleClick={this.handleClick} />)
 
         return (
             <div>
                 <List>
+                    {parentFile}
                     {fileItems}
                 </List>
             </div>
