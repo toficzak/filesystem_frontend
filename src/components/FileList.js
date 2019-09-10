@@ -16,6 +16,7 @@ class FileList extends Component {
             breadcrumbs: []
         }
         this.handleClick = this.handleClick.bind(this);
+        this.handleBreadcrumbClick = this.handleBreadcrumbClick.bind(this);
     }
 
     componentDidMount() {
@@ -60,20 +61,43 @@ class FileList extends Component {
     }
 
 
+    handleBreadcrumbClick(breadcrumb) {
+        this.setState({
+            loading: true
+        })
+        console.log(breadcrumb.id)
+
+        fetch("http://localhost:8080/files/" + breadcrumb.id)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                this.setState({
+                    loading: false,
+                    parent: response.metadata.parent,
+                    files: response.data.files,
+                    breadcrumbs: response.metadata.breadcrumbs
+                })
+            })
+
+    }
+
+
+
+
     render() {
         let parentFile = ""
         if (this.state.parent !== null) {
             parentFile = <File key={this.state.parent.id} file={this.state.parent} handleClick={this.handleClick} />
         }
         const fileItems = this.state.files.map(file => <File key={file.id} file={file} handleClick={this.handleClick} />)
-        const breadcrumbs = this.state.breadcrumbs.map(breadcrumb => <Breadcrumb key={breadcrumb.id} breadcrumb={breadcrumb} />)
+        const breadcrumbs = this.state.breadcrumbs.map(breadcrumb => <Breadcrumb key={breadcrumb.id} breadcrumb={breadcrumb} handleBreadcrumbClick={this.handleBreadcrumbClick} />)
 
 
         return (
             <div>
-                    <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                        {breadcrumbs}
-                    </Breadcrumbs>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb"   >
+                    {breadcrumbs}
+                </Breadcrumbs>
                 <List>
                     {parentFile}
                     {fileItems}
