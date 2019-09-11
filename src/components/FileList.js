@@ -13,7 +13,8 @@ class FileList extends Component {
             loading: false,
             parent: null,
             files: [],
-            breadcrumbs: []
+            breadcrumbs: [],
+            types: []
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleBreadcrumbClick = this.handleBreadcrumbClick.bind(this);
@@ -25,7 +26,6 @@ class FileList extends Component {
             .then(rootFile => fetch("http://localhost:8080/files/" + rootFile.id))
             .then(response => response.json())
             .then(response => {
-                console.log(response)
                 this.setState({
                     loading: false,
                     parent: response.metadata.parent,
@@ -34,18 +34,23 @@ class FileList extends Component {
                 })
             })
 
+        fetch("http://localhost:8080/types")
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    types: response
+                })
+            })
     }
 
     handleClick(file) {
         this.setState({
             loading: true
         })
-        console.log(file.id)
-        if (file.isContainer) {
+        if ( this.state.types.filter(t => t.name === file.type)[0].isContainer) {
             fetch("http://localhost:8080/files/" + file.id)
                 .then(response => response.json())
                 .then(response => {
-                    console.log(response)
                     this.setState({
                         loading: false,
                         parent: response.metadata.parent,
@@ -65,12 +70,10 @@ class FileList extends Component {
         this.setState({
             loading: true
         })
-        console.log(breadcrumb.id)
 
         fetch("http://localhost:8080/files/" + breadcrumb.id)
             .then(response => response.json())
             .then(response => {
-                console.log(response)
                 this.setState({
                     loading: false,
                     parent: response.metadata.parent,
@@ -81,17 +84,30 @@ class FileList extends Component {
 
     }
 
-
-
-
     render() {
         let parentFile = ""
         if (this.state.parent !== null) {
-            parentFile = <File key={this.state.parent.id} file={this.state.parent} handleClick={this.handleClick} />
+            parentFile = 
+            <File 
+                key={this.state.parent.id} 
+                file={this.state.parent} 
+                handleClick={this.handleClick}
+                type={this.state.types.filter(t => this.state.parent.type === t.name)}
+            />
         }
-        const fileItems = this.state.files.map(file => <File key={file.id} file={file} handleClick={this.handleClick} />)
-        const breadcrumbs = this.state.breadcrumbs.map(breadcrumb => <Breadcrumb key={breadcrumb.id} breadcrumb={breadcrumb} handleBreadcrumbClick={this.handleBreadcrumbClick} />)
-
+        const fileItems = this.state.files.map(file => 
+        <File 
+            key={file.id} 
+            file={file} 
+            handleClick={this.handleClick} 
+            type={this.state.types.filter(t => file.type === t.name)}
+        />)
+        const breadcrumbs = this.state.breadcrumbs.map(breadcrumb => 
+            <Breadcrumb 
+                key={breadcrumb.id} 
+                breadcrumb={breadcrumb} 
+                handleBreadcrumbClick={this.handleBreadcrumbClick} 
+            />)
 
         return (
             <div>
