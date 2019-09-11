@@ -14,9 +14,12 @@ class FileList extends Component {
             parent: null,
             files: [],
             breadcrumbs: [],
-            types: []
+            types: [],
+            context: null
         }
         this.handleClick = this.handleClick.bind(this);
+        this.handleCopy = this.handleCopy.bind(this);
+        this.handleDeleteAsset = this.handleDeleteAsset.bind(this);
         this.handleBreadcrumbClick = this.handleBreadcrumbClick.bind(this);
     }
 
@@ -47,7 +50,7 @@ class FileList extends Component {
         this.setState({
             loading: true
         })
-        if ( this.state.types.filter(t => t.name === file.type)[0].isContainer) {
+        if (this.state.types.filter(t => t.name === file.type)[0].isContainer) {
             fetch("http://localhost:8080/files/" + file.id)
                 .then(response => response.json())
                 .then(response => {
@@ -65,7 +68,6 @@ class FileList extends Component {
         }
     }
 
-
     handleBreadcrumbClick(breadcrumb) {
         this.setState({
             loading: true
@@ -81,38 +83,76 @@ class FileList extends Component {
                     breadcrumbs: response.metadata.breadcrumbs
                 })
             })
+    }
 
+    handleCopy(e, sourceFile, contextId) {
+        e.stopPropagation();
+        this.setState({
+            loading: true
+        })
+
+        const currentFile = {
+            id: contextId,
+            type: "Directory"
+        }
+
+        fetch("http://localhost:8080/files/" + sourceFile.id + "/copy/" + contextId, {
+            method: 'put'
+          }).then(() => this.handleClick(currentFile))
+    }
+
+    handleDeleteAsset(e, file, contextId) {
+        e.stopPropagation();
+        this.setState({
+            loading: true
+        })
+
+        const currentFile = {
+            id: contextId,
+            type: "Directory"
+        }
+
+        fetch("http://localhost:8080/files/" + file.id, {
+            method: 'delete'
+          }).then(() => this.handleClick(currentFile))
     }
 
     render() {
         let parentFile = ""
         if (this.state.parent !== null) {
-            parentFile = 
-            <File 
-                key={this.state.parent.id} 
-                file={this.state.parent} 
-                handleClick={this.handleClick}
-                type={this.state.types.filter(t => this.state.parent.type === t.name)}
-            />
+            parentFile =
+                <File
+                    key={this.state.parent.id}
+                    file={this.state.parent}
+                    handleClick={this.handleClick}
+                    type={this.state.types.filter(t => this.state.parent.type === t.name)}
+                />
         }
-        const fileItems = this.state.files.map(file => 
-        <File 
-            key={file.id} 
-            file={file} 
-            handleClick={this.handleClick} 
-            type={this.state.types.filter(t => file.type === t.name)}
-        />)
-        const breadcrumbs = this.state.breadcrumbs.map(breadcrumb => 
-            <Breadcrumb 
-                key={breadcrumb.id} 
-                breadcrumb={breadcrumb} 
-                handleBreadcrumbClick={this.handleBreadcrumbClick} 
+        const fileItems = this.state.files.map(file =>
+            <File
+                key={file.id}
+                file={file}
+                contextId={this.state.breadcrumbs[this.state.breadcrumbs.length-1]['id']}
+                handleClick={this.handleClick}
+                handleCopy={this.handleCopy}
+                handleDeleteAsset={this.handleDeleteAsset}
+                type={this.state.types.filter(t => file.type === t.name)}
+            />)
+        const breadcrumbs = this.state.breadcrumbs.map(breadcrumb =>
+            <Breadcrumb
+                key={breadcrumb.id}
+                breadcrumb={breadcrumb}
+                handleBreadcrumbClick={this.handleBreadcrumbClick}
             />)
 
         return (
             <div>
-                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb"   >
-                    {breadcrumbs}
+                <Breadcrumbs 
+                    separator={
+                        <NavigateNextIcon fontSize="small" />} 
+                    aria-label="breadcrumb"
+                >
+                {breadcrumbs}
                 </Breadcrumbs>
                 <List>
                     {parentFile}
