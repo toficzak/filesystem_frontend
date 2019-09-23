@@ -3,6 +3,8 @@ import File from '../components/File'
 import List from '@material-ui/core/List';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Breadcrumb from "./Breadcrumb"
+import FileInput from "./FileInput"
+import FolderCreator from "./FolderCreator"
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
@@ -15,7 +17,8 @@ class FileList extends Component {
             files: [],
             breadcrumbs: [],
             types: [],
-            context: null
+            context: null,
+            contextId: 4
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleCopy = this.handleCopy.bind(this);
@@ -36,7 +39,6 @@ class FileList extends Component {
                     breadcrumbs: response.metadata.breadcrumbs
                 })
             })
-
         fetch("http://localhost:8080/types")
             .then(response => response.json())
             .then(response => {
@@ -117,9 +119,15 @@ class FileList extends Component {
           }).then(() => this.handleClick(currentFile))
     }
 
+
+    
     render() {
         let parentFile = ""
+        let contextId = 4 // root
+
         if (this.state.parent !== null) {
+            
+            contextId = this.state.parent.id
             parentFile =
                 <File
                     key={this.state.parent.id}
@@ -145,19 +153,41 @@ class FileList extends Component {
                 handleBreadcrumbClick={this.handleBreadcrumbClick}
             />)
 
+        const fileInputer = <FileInput contextId={contextId} handleClick={this.handleClick}/>
+        const directoryInputer = <FolderCreator contextId={contextId} handleClick={this.handleClick}/>
+
+        const managerStyle = {
+            float: 'left',
+            width: '50%'
+        }
+
+        const uploaderStyle = {
+            float: 'right',
+            width: '50%'
+        }
+
         return (
             <div>
-                <Breadcrumbs 
-                    separator={
-                        <NavigateNextIcon fontSize="small" />} 
-                    aria-label="breadcrumb"
-                >
-                {breadcrumbs}
-                </Breadcrumbs>
-                <List>
-                    {parentFile}
-                    {fileItems}
-                </List>
+                <div style={managerStyle}>
+                    <Breadcrumbs 
+                        separator={
+                            <NavigateNextIcon fontSize="small" />} 
+                        aria-label="breadcrumb"
+                    >
+                    {breadcrumbs}
+                    </Breadcrumbs>
+                    <List>
+                        {parentFile}
+                        {fileItems}
+                    </List>
+                </div>
+                <div style={uploaderStyle}>
+                    {fileInputer}
+                    <div>
+                    {directoryInputer}
+                </div>
+                </div>
+                
             </div>
         )
     }
