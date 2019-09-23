@@ -20,14 +20,14 @@ class FolderCreator extends React.Component {
       event.preventDefault();
       
       const currentFile = {
-        id: this.state.contextId,
+        id: this.props.contextId,
         type: "Directory"
     }
     
       let directory = {
         name: this.state.value,
         type: 'Directory',
-        parentId: this.state.contextId
+        parentId: this.props.contextId
     }
 
     fetch("http://localhost:8080/files", {

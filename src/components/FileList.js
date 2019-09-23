@@ -18,7 +18,8 @@ class FileList extends Component {
             breadcrumbs: [],
             types: [],
             context: null,
-            contextId: 4
+            rootFileId: null,
+            contextId: null
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleCopy = this.handleCopy.bind(this);
@@ -36,7 +37,9 @@ class FileList extends Component {
                     loading: false,
                     parent: response.metadata.parent,
                     files: response.data.files,
-                    breadcrumbs: response.metadata.breadcrumbs
+                    breadcrumbs: response.metadata.breadcrumbs,
+                    contextId: 4,
+                    rootFileId: 4
                 })
             })
         fetch("http://localhost:8080/types")
@@ -56,11 +59,13 @@ class FileList extends Component {
             fetch("http://localhost:8080/files/" + file.id)
                 .then(response => response.json())
                 .then(response => {
+                    console.log(response)
                     this.setState({
                         loading: false,
                         parent: response.metadata.parent,
                         files: response.data.files,
-                        breadcrumbs: response.metadata.breadcrumbs
+                        breadcrumbs: response.metadata.breadcrumbs,
+                        contextId: file.id
                     })
                 })
         }
@@ -82,7 +87,8 @@ class FileList extends Component {
                     loading: false,
                     parent: response.metadata.parent,
                     files: response.data.files,
-                    breadcrumbs: response.metadata.breadcrumbs
+                    breadcrumbs: response.metadata.breadcrumbs,
+                    contextId: breadcrumb.id
                 })
             })
     }
@@ -123,11 +129,8 @@ class FileList extends Component {
     
     render() {
         let parentFile = ""
-        let contextId = 4 // root
 
         if (this.state.parent !== null) {
-            
-            contextId = this.state.parent.id
             parentFile =
                 <File
                     key={this.state.parent.id}
@@ -153,8 +156,8 @@ class FileList extends Component {
                 handleBreadcrumbClick={this.handleBreadcrumbClick}
             />)
 
-        const fileInputer = <FileInput contextId={contextId} handleClick={this.handleClick}/>
-        const directoryInputer = <FolderCreator contextId={contextId} handleClick={this.handleClick}/>
+        const fileInputer = <FileInput contextId={this.state.contextId} handleClick={this.handleClick}/>
+        const directoryInputer = <FolderCreator contextId={this.state.contextId} handleClick={this.handleClick}/>
 
         const managerStyle = {
             float: 'left',

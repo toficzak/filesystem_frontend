@@ -5,13 +5,12 @@ class FileInput extends React.Component {
       super(props);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.fileInput = React.createRef();
-      this.contextId = props.contextId
     }
     handleSubmit(event) {
         event.preventDefault()
 
         const currentFile = {
-            id: this.contextId,
+            id: this.props.contextId,
             type: "Directory"
         }
         
@@ -19,7 +18,7 @@ class FileInput extends React.Component {
             name: this.fileInput.current.files[0].name,
             size: this.fileInput.current.files[0].size,
             type: 'Image',
-            parentId: this.contextId,
+            parentId: this.props.contextId,
             path: '/home/krzysztof/Pictures/' + this.fileInput.current.files[0].name
         }
         
